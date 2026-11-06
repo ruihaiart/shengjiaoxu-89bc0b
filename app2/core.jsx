@@ -126,6 +126,8 @@ function Icon({ name, size = 20 }) {
   const p = {
     course: <><path d="M4 5h7v14H4zM13 5h7v14h-7z" /></>,
     tie: <><rect x="4" y="4" width="16" height="16" rx="1" /><path d="M9 4v16M14 4v16" /></>,
+    read: <><path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V19c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z" /><path d="M12 6v13.5" /></>,
+    timer: <><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2 2M9 2h6" /></>,
     me: <><circle cx="12" cy="8" r="4" /><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6" /></>,
     close: <path d="M6 6l12 12M18 6L6 18" />, left: <path d="M15 5l-7 7 7 7" />, right: <path d="M9 5l7 7-7 7" />,
     play: <path d="M8 5v14l11-7z" />, check: <path d="M5 12.5l4.5 4.5L19 7" />, lock: <><rect x="5" y="11" width="14" height="9" rx="1" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></>,

@@ -18,14 +18,17 @@
 <script src="data/zhuzi.js"></script>
 <script src="data/laws.js"></script>
 <script src="data/videos.js"></script>
+<script src="data/duidu.js"></script>
+<script src="data/jinglin.js"></script>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel" src="app2/core.jsx"></script>
+<script type="text/babel" src="app2/jinglin.jsx"></script>
 <script type="text/babel" src="app2/course.jsx"></script>
 <script type="text/babel" src="app2/tie.jsx"></script>
 <script type="text/babel">
-const TABS = [['course', '课程', 'course'], ['tie', '字帖', 'tie'], ['me', '我的', 'me']];
+const TABS = [['course', '课程', 'course'], ['read', '读文', 'read'], ['tie', '字帖', 'tie'], ['me', '我的', 'me']];
 function App() {
   const [s, update] = useStore2();
   const [route, setRoute] = React.useState(() => { try { return JSON.parse(localStorage.getItem('sjx2-route')) || { tab: 'course' }; } catch (e) { return { tab: 'course' }; } });
@@ -34,6 +37,10 @@ function App() {
   React.useEffect(() => { document.documentElement.dataset.theme = s.settings.theme; }, [s.settings.theme]);
   const openLesson = n => { setRoute({ tab: 'course', lesson: n }); window.scrollTo(0, 0); };
   const openChar = (c, i) => setChar({ c, i });
+  const openJL = k => { setRoute({ tab: 'course', jl: k }); window.scrollTo(0, 0); };
+  const goRead = n => { setRoute({ tab: 'read', focus: n }); };
+  const goTie = p => { localStorage.setItem('sjx2-page', p); setRoute({ tab: 'tie' }); window.scrollTo(0, 0); };
+  const home = () => setRoute({ tab: 'course' });
   const script = s.settings.script;
   return (
     <ScriptCtx.Provider value={script}>
@@ -46,12 +53,15 @@ function App() {
         </div>
       </div></header>
       <main className="main" data-screen-label={route.tab + (route.lesson != null ? '-' + route.lesson : '')}>
-        {route.tab === 'course' && route.lesson == null && <CourseHome s={s} openLesson={openLesson} />}
-        {route.tab === 'course' && route.lesson != null && <LessonPage n={route.lesson} s={s} update={update} back={() => setRoute({ tab: 'course' })} openChar={openChar} openLesson={openLesson} />}
+        {route.tab === 'course' && route.lesson == null && route.jl == null && <CourseHome s={s} openLesson={openLesson} openJL={openJL} />}
+        {route.tab === 'course' && route.lesson != null && <LessonPage n={route.lesson} s={s} update={update} back={home} openChar={openChar} openLesson={openLesson} />}
+        {route.tab === 'course' && route.jl === 'home' && <JinglinHome s={s} back={home} openJL={openJL} />}
+        {route.tab === 'course' && typeof route.jl === 'number' && <JinglinDay k={route.jl} s={s} update={update} back={home} openJL={openJL} openChar={openChar} goRead={goRead} />}
+        {route.tab === 'read' && <ReadPage s={s} openChar={openChar} focus={route.focus} goTie={goTie} />}
         {route.tab === 'tie' && <TiePage openChar={openChar} />}
         {route.tab === 'me' && <MePage s={s} update={update} openLesson={openLesson} />}
       </main>
-      {char && <CharDrawer c={char.c} boxIdx={char.i} onClose={() => setChar(null)} openChar={openChar} openLesson={n => { setChar(null); openLesson(n); }} />}
+      {char && <CharDrawer c={char.c} boxIdx={char.i} onClose={() => setChar(null)} openChar={openChar} openLesson={n => { setChar(null); openLesson(n); }} openJL={k => { setChar(null); openJL(k); }} goRead={n => { setChar(null); goRead(n); }} />}
     </ScriptCtx.Provider>
   );
 }

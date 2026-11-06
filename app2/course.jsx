@@ -1,5 +1,5 @@
 // ============ 课程：首页路线 + 单课页 ============
-function CourseHome({ s, openLesson }) {
+function CourseHome({ s, openLesson, openJL }) {
   const cur = currentLesson(s);
   const L = LESSONS[cur];
   const sch = schedule(s.settings.minutes);
@@ -11,11 +11,11 @@ function CourseHome({ s, openLesson }) {
   return (
     <div className="home">
       <section className="how">
-        <div className="how-step"><b>1</b><span>每天一课</span><em>从总纲到第十八法，依次学习</em></div>
+        <div className="how-step"><b>1</b><span>主课 · 十八法</span><em>每天一课：学 · 看 · 写 · 测，约 {s.settings.minutes} 分钟</em></div>
         <div className="how-arrow" />
-        <div className="how-step"><b>2</b><span>学 · 看 · 写 · 测</span><em>一课四段，约 {s.settings.minutes} 分钟</em></div>
+        <div className="how-step"><b>2</b><span>加练 · 一字精临</span><em>读帖 · 双钩 · 临写 · 比对，20 分钟</em></div>
         <div className="how-arrow" />
-        <div className="how-step"><b>3</b><span>自测过关</span><em>自测全部勾选，解锁下一课</em></div>
+        <div className="how-step"><b>3</b><span>读文 · 随时</span><em>碰到的字，在原文里看它在说什么</em></div>
       </section>
 
       <section className="today-card" onClick={() => openLesson(cur)}>
@@ -34,9 +34,18 @@ function CourseHome({ s, openLesson }) {
         </div>
       </section>
 
+      {(() => { const k = jlCurrent(s); const r = JL.chars[k]; const done = (s.jl || {})[r[0]]?.done === todayKey(); return (
+        <button className="jl-today" onClick={() => openJL(k)}>
+          <CharCrop c={r[0]} occ={CHAR_INDEX[r[0]] && (CHAR_INDEX[r[0]].find(o => o.i >= 29) || CHAR_INDEX[r[0]][0])} size={64} />
+          <div><div className="eyebrow">加练 · 二十字精临 · 第{cnNum(r[1])}周</div><b>{done ? `今天已精临「${r[0]}」` : `今日一字：「${r[0]}」`}</b><em>{r[5]} · 20 分钟</em></div>
+          <Icon name="right" size={18} />
+        </button>); })()}
+
+      <JinglinPath s={s} openJL={openJL} />
+
       <section className="path">
         <div className="path-head">
-          <h2>学习路线</h2>
+          <h2>十八法路线</h2>
           <span className="muted">已完成 {doneN} / {LESSONS.length} 课 · 连续 {streakOf(s)} 天</span>
         </div>
         {groups.map(([g, ls]) => (
@@ -58,7 +67,7 @@ function CourseHome({ s, openLesson }) {
         ))}
         <div className="path-next">
           <Seal size={40}>通临</Seal>
-          <div><b>第二阶段 · 整页通临</b><p className="muted">学完十八法后，每天在「字帖」里临一页，体会字与字之间的行气。</p></div>
+          <div><b>之后 · 按结构归类临</b><p className="muted">十八法与二十字都完成后，不急着通临：把碑中所有「氵」旁、「口」部、带戈钩的字各挑十个横向比较；再在「字帖」中整页临写，体会行气。</p></div>
         </div>
       </section>
     </div>

@@ -41,7 +41,7 @@ function TiePage({ openChar }) {
           {boxes.length ? <div className="sw-cols">
             {cols.map((col, ci) => <div key={ci} className="sw-col">{col.map(b => <span key={b.i} className={'sw-c ' + (hover === b.i ? 'hv' : '')} onMouseEnter={() => setHover(b.i)} onMouseLeave={() => setHover(null)} onClick={() => openChar(b.c, b.i)}>{showChar(b.c, script)}</span>)}</div>)}
           </div> : <div className="sw-pending">本页暂无标注。</div>}
-          {page >= AUTO_FROM && <p className="muted small sw-note">本页字框为自动对齐，个别字可能有一两字偏移，校对中。</p>}
+          {page >= AUTO_FROM && <p className="muted small sw-note">本页字框已逐行校对。如发现个别切图与字不符，请告诉我页码与行号。</p>}
         </aside>
       </div>
       <div className="filmstrip">
@@ -60,7 +60,7 @@ function TiePage({ openChar }) {
   );
 }
 
-function CharDrawer({ c, boxIdx, onClose, openChar, openLesson }) {
+function CharDrawer({ c, boxIdx, onClose, openChar, openLesson, openJL, goRead }) {
   const script = useScript();
   const [inv, setInv] = useState(false);
   const [grid, setGrid] = useState('mi');
@@ -92,7 +92,7 @@ function CharDrawer({ c, boxIdx, onClose, openChar, openLesson }) {
           {occ && <Seg value={inv ? 'w' : 'b'} onChange={v => setInv(v === 'w')} options={[['b', '原拓'], ['w', '反相']]} />}
         </div>
         {!occ && <p className="muted small">此字不在《圣教序》帖中，仅作结构参照。</p>}
-        {occ && occ.page >= AUTO_FROM && <p className="muted small">第{occ.page}页字框为自动对齐，若切图与字不符请以原帖为准。</p>}
+        {occ && occ.page >= AUTO_FROM && <p className="muted small">第{occ.page}页第{occ.col + 1}行 · 若切图与字不符，请反馈页码与行号。</p>}
 
         <section className="cd-sec">
           <h4>书写要点</h4>
@@ -104,6 +104,19 @@ function CharDrawer({ c, boxIdx, onClose, openChar, openLesson }) {
           <h4>帖中同字 · {occs.length} 处写法</h4>
           <div className="cd-occs">{occs.map((o, j) => <button key={j} className={j === oi ? 'on' : ''} onClick={() => setOi(j)}><CharCrop occ={o} size={72} invert={inv} /><span>第{o.page}页</span></button>)}</div>
         </section>}
+
+        {(() => { const k = JL.chars.findIndex(r => r[0] === c); return k >= 0 ? <section className="cd-sec">
+          <h4>二十字精临 · 第{cnNum(JL.chars[k][1])}周</h4>
+          <p className="cd-tip">「{JL.chars[k][5]}」——{JL.chars[k][3]}，主笔在{JL.chars[k][4]}。</p>
+          <button className="chip" onClick={() => { onClose(); openJL(k); }}>去精临这个字 →</button>
+        </section> : null; })()}
+
+        {occ && segOf(occ.i) && (() => { const sg = segOf(occ.i); return <section className="cd-sec">
+          <h4>它在文章里 · 对读第 {String(sg[0]).padStart(2, '0')} 段</h4>
+          <p className="seg-o sm">{(() => { let ci = sg[1]; return [...sg[3]].map((ch, j) => { const isC = ch >= '\u4e00' && ch <= '\u9fff'; const idx = isC ? ci++ : -1; return <span key={j} className={idx === occ.i ? 'hit' : ''}>{script === 'simp' ? (DICT[ch]?.[0] || ch) : ch}</span>; }); })()}</p>
+          <p className="seg-y">{sg[4]}</p>
+          <button className="chip" onClick={() => { onClose(); goRead(sg[0]); }}>在「读文」中看上下文 →</button>
+        </section>; })()}
 
         {ctx.length > 0 && <section className="cd-sec">
           <h4>所在行 · 第{occ.page}页第{occ.col + 1}行</h4>
