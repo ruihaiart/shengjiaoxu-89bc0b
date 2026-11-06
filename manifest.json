@@ -1,0 +1,29 @@
+{
+  "name": "集王聖教序習字",
+  "short_name": "聖教序習字",
+  "description": "集王聖教序習字 · 十八法一天一课",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4efe5",
+  "theme_color": "#f4efe5",
+  "icons": [
+    {
+      "src": "assets/icon/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

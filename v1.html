@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- mobile-shell: home-screen / standalone support (Harry-Owner patch, re-applied after each sync) -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="聖教序習字">
+<meta name="application-name" content="聖教序習字">
+<meta name="theme-color" content="#f4efe5">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/icon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon/icon-192.png">
+<script>(function(){var m=document.querySelector('meta[name=theme-color]'),c={day:'#f4efe5',night:'#141210'},h=document.documentElement,f=function(){m.content=c[h.dataset.theme]||c.day};f();new MutationObserver(f).observe(h,{attributes:true,attributeFilter:['data-theme']})})();</script>
+<!-- /mobile-shell -->
 <title>圣教序习字 · 每日临池</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

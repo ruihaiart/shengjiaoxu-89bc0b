@@ -1,5 +1,5 @@
 /* ============ 圣教序习字 v2 ============ */
-:root{--serif:"Noto Serif SC","Noto Serif TC","Songti SC",serif;--cin:oklch(0.55 0.17 32);--cin-soft:oklch(0.55 0.17 32 / .1);--r:4px}
+:root{--sat:env(safe-area-inset-top,0px);--serif:"Noto Serif SC","Noto Serif TC","Songti SC",serif;--cin:oklch(0.55 0.17 32);--cin-soft:oklch(0.55 0.17 32 / .1);--r:4px}
 html[data-theme=day]{--bg:#f4efe5;--bg2:#ebe4d5;--card:#fbf8f2;--line:#d8cdb8;--line2:#e5dccb;--ink:#221e19;--ink2:#4c443a;--mute:#8a7f70;--gold:#8a6a35;--crop:#15120f;--grid:oklch(0.55 0.17 32 / .6);--shadow:0 18px 50px rgba(70,45,10,.16)}
 html[data-theme=night]{--bg:#141210;--bg2:#1d1a16;--card:#201c18;--line:#3a332b;--line2:#2b2621;--ink:#ece3d2;--ink2:#b9ad99;--mute:#81776a;--gold:#d8c39a;--crop:#0e0d0c;--grid:oklch(0.6 0.17 32 / .55);--shadow:0 18px 50px rgba(0,0,0,.5)}
 *{box-sizing:border-box}
@@ -14,7 +14,8 @@ a{color:inherit}
 .eyebrow{font-size:12px;letter-spacing:.22em;color:var(--mute);margin-bottom:12px;display:flex;align-items:center;gap:10px}
 
 /* 顶栏 */
-.top{position:sticky;top:0;z-index:30;background:color-mix(in oklab,var(--bg) 90%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line2)}
+.top{position:sticky;top:0;z-index:30;padding-top:var(--sat);background:color-mix(in oklab,var(--bg) 90%,transparent);border-bottom:1px solid var(--line2)}
+.top::before{content:"";position:absolute;inset:0;z-index:-1;backdrop-filter:blur(12px)}
 .top-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:28px;padding:12px clamp(16px,4vw,40px)}
 .brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:19px;letter-spacing:.2em}
 .tabs{display:flex;gap:4px;margin-left:auto}
@@ -94,7 +95,7 @@ a{color:inherit}
 .path-next p{margin:4px 0 0;font-size:14px}
 
 /* ---------- 单课 ---------- */
-.ls-top{position:sticky;top:63px;z-index:20;display:flex;align-items:center;gap:20px;padding:10px 0;margin:-20px 0 20px;background:var(--bg);border-bottom:1px solid var(--line2)}
+.ls-top{position:sticky;top:calc(63px + var(--sat));z-index:20;display:flex;align-items:center;gap:20px;padding:10px 0;margin:-20px 0 20px;background:var(--bg);border-bottom:1px solid var(--line2)}
 .back{display:flex;align-items:center;gap:4px;color:var(--mute);font-size:14px;flex:none}
 .back:hover{color:var(--ink)}
 .ls-steps{display:flex;gap:4px;margin-left:auto}
@@ -190,7 +191,7 @@ a{color:inherit}
 .hot{position:absolute;border:1px solid transparent;border-radius:2px;transition:.15s}
 .rub:hover .hot{border-color:rgba(216,195,154,.18)}
 .hot:hover,.hot.hv{border-color:var(--cin)!important;background:oklch(0.55 0.17 32 / .18)}
-.shiwen{position:sticky;top:90px}
+.shiwen{position:sticky;top:calc(90px + var(--sat))}
 .sw-cols{display:flex;flex-direction:row-reverse;gap:4px;justify-content:center;background:var(--card);padding:16px 10px;border-radius:var(--r);border:1px solid var(--line2)}
 .sw-col{display:flex;flex-direction:column;gap:1px}
 .sw-c{width:28px;height:28px;display:grid;place-items:center;font-size:19px;cursor:pointer;border-radius:2px}
@@ -209,9 +210,9 @@ a{color:inherit}
 /* ---------- 抽屉 ---------- */
 .drawer-back{position:fixed;inset:0;background:rgba(10,8,6,.5);z-index:50;backdrop-filter:blur(3px);animation:fade .25s}
 @keyframes fade{from{opacity:0}}
-.drawer{position:absolute;right:0;top:0;bottom:0;width:min(540px,100%);background:var(--bg);overflow-y:auto;padding:30px 30px 60px;box-shadow:var(--shadow);animation:slideIn .35s cubic-bezier(.3,0,.2,1)}
+.drawer{position:absolute;right:0;top:0;bottom:0;width:min(540px,100%);background:var(--bg);overflow-y:auto;padding:calc(30px + var(--sat)) 30px 60px;box-shadow:var(--shadow);animation:slideIn .35s cubic-bezier(.3,0,.2,1)}
 @keyframes slideIn{from{transform:translateX(40px);opacity:0}}
-.drawer-x{position:absolute;right:14px;top:14px}
+.drawer-x{position:absolute;right:14px;top:calc(14px + var(--sat))}
 .cd-hero{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:end}
 .cd-crop{box-shadow:var(--shadow)}
 .cd-chars{display:flex;gap:16px}
@@ -379,7 +380,7 @@ a{color:inherit}
 .read-guide p{margin:0 0 8px;font-size:15px}
 .hl-jl{background:var(--cin-soft);color:var(--cin);padding:0 4px;border-radius:2px}
 .vol{margin-bottom:44px}
-.vol-head{display:flex;gap:16px;align-items:center;padding-bottom:16px;border-bottom:2px solid var(--ink);margin-bottom:8px;position:sticky;top:62px;background:var(--bg);z-index:5;padding-top:10px}
+.vol-head{display:flex;gap:16px;align-items:center;padding-bottom:16px;border-bottom:2px solid var(--ink);margin-bottom:8px;position:sticky;top:calc(62px + var(--sat));background:var(--bg);z-index:5;padding-top:10px}
 .vol-t{font-size:13px;letter-spacing:.2em;color:#fff;background:var(--cin);padding:4px 10px;border-radius:3px;flex:none}
 .vol-head h3{font-size:22px;letter-spacing:.1em}
 .vol-head em{font-style:normal;font-size:12px;color:var(--mute)}
@@ -424,7 +425,7 @@ a{color:inherit}
   .tc-right{grid-template-columns:repeat(4,1fr);width:100%;gap:6px}
   .tc-right .crop{width:100%!important;height:auto!important;aspect-ratio:1}
   .today-card .btn{width:100%}
-  .ls-top{top:58px;gap:8px}
+  .ls-top{top:calc(58px + var(--sat));gap:8px}
   .back{font-size:0}.back svg{width:22px;height:22px}
   .ls-steps{flex:1;justify-content:space-between}
   .ls-steps button{padding:4px;flex-direction:column;gap:2px}
@@ -449,7 +450,7 @@ a{color:inherit}
   .stat.big b{font-size:44px}.stat b{font-size:28px}
   .card{padding:16px}
   .cell .cl{display:none}
-  .drawer{padding:22px 18px 60px}
+  .drawer{padding:calc(22px + var(--sat)) 18px 60px}
   .jl-weeks{grid-template-columns:minmax(0,1fr)}
   .jl-steps-grid{grid-template-columns:1fr}
   .jl-twocol{grid-template-columns:1fr}
@@ -461,7 +462,7 @@ a{color:inherit}
   .dseg{grid-template-columns:30px minmax(0,1fr);gap:10px}
   .seg-o{font-size:19px}
   .sec-label{padding-left:40px}
-  .vol-head{top:58px}
+  .vol-head{top:calc(58px + var(--sat))}
   .tab{font-size:11px}
   .cd-hero{grid-template-columns:1fr;justify-items:center;text-align:center}
   .cd-crop{width:min(280px,78vw)!important;height:min(280px,78vw)!important}
