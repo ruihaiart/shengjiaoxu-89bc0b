@@ -87,11 +87,26 @@ function CharCrop({ occ, c, size = 120, invert = false, grid = 'none', className
       <span style={{ fontSize: size * 0.56 }}>{c}</span>{grid !== 'none' && <GridOverlay kind={grid} />}
     </div>
   );
-  const side = Math.max(o.w, o.h) * (1 + pad * 2), cx = o.x + o.w / 2, cy = o.y + o.h / 2;
+  // 紧框数据（data/boxes-tight.js，由 patch-mobile/tight/refine3.py 生成）：米字格以字形墨迹为准居中，可视窗只含本字所在列段
+  const t = (window.SJX_TIGHT || [])[o.i];
+  const [bx, by, bw, bh] = t || [o.x, o.y, o.w, o.h];
+  const side = Math.max(bw, bh) * (1 + pad * 2), cx = bx + bw / 2, cy = by + bh / 2, sx = cx - side / 2, sy = cy - side / 2;
   const pct = v => `${v / side * 100}%`;
-  return (
+  const pageStyle = { position: 'absolute', left: pct(-sx), top: pct(-sy), width: pct(PAGE_W), height: pct(PAGE_H), maxWidth: 'none' };
+  if (!t) return (
     <div className={'crop ' + (invert ? 'is-inv ' : '') + className} style={{ width: size, height: size }}>
-      <img src={pageSrc(o.page)} alt={o.c} draggable="false" style={{ position: 'absolute', left: pct(-(cx - side / 2)), top: pct(-(cy - side / 2)), width: pct(PAGE_W), height: pct(PAGE_H), maxWidth: 'none' }} />
+      <img src={pageSrc(o.page)} alt={o.c} draggable="false" style={pageStyle} />
+      {grid !== 'none' && <GridOverlay kind={grid} />}
+    </div>
+  );
+  const wx0 = Math.max(sx, t[6]), wx1 = Math.min(sx + side, t[7]), wy0 = Math.max(sy, t[4]), wy1 = Math.min(sy + side, t[5]);
+  const ww = Math.max(1, wx1 - wx0), wh = Math.max(1, wy1 - wy0);
+  return (
+    <div className={'crop crop-tight ' + (invert ? 'is-inv ' : '') + className} style={{ width: size, height: size }}>
+      <img className="crop-ghost" src={pageSrc(o.page)} alt="" aria-hidden="true" draggable="false" style={pageStyle} />
+      <div className="crop-win" style={{ left: pct(wx0 - sx), top: pct(wy0 - sy), width: pct(ww), height: pct(wh) }}>
+        <img src={pageSrc(o.page)} alt={o.c} draggable="false" style={{ position: 'absolute', left: `${-wx0 / ww * 100}%`, top: `${-wy0 / wh * 100}%`, width: `${PAGE_W / ww * 100}%`, height: `${PAGE_H / wh * 100}%`, maxWidth: 'none' }} />
+      </div>
       {grid !== 'none' && <GridOverlay kind={grid} />}
     </div>
   );

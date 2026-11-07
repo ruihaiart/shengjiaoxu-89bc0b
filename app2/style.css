@@ -468,3 +468,13 @@ a{color:inherit}
   .cd-crop{width:min(280px,78vw)!important;height:min(280px,78vw)!important}
   .cd-chars{justify-content:center}
 }
+/* mobile-shell patch: 米字格切图 — 米字格以字形墨迹居中，可视窗只含本字列段，窗外邻字只留极淡 ghost；米字格线加粗提亮 */
+.crop-win{position:absolute;overflow:hidden}
+.crop-win img{position:absolute;max-width:none}
+.crop-ghost{opacity:.12}
+.crop-tight.is-inv{background:#fff}
+.crop.is-inv .crop-ghost{opacity:.09}
+.grid-ov line,.grid-ov rect{stroke:oklch(0.72 0.16 32 / .95);stroke-width:1;stroke-dasharray:none}
+.grid-ov rect{stroke-width:1.5}
+.crop.is-inv .grid-ov line,.crop.is-inv .grid-ov rect,.crop-fb .grid-ov line,.crop-fb .grid-ov rect{stroke:oklch(0.5 0.17 32 / .9)}
+/* /mobile-shell patch: 米字格切图 */
