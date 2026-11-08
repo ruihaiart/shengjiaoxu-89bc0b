@@ -20,66 +20,17 @@
 <title>圣教序习字 · 十八法课程</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;900&family=Noto+Serif+TC:wght@400;600;900&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;900&family=Noto+Serif+TC:wght@400;600;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;900&family=Noto+Serif+TC:wght@400;600;900&display=swap"></noscript>
 <link rel="stylesheet" href="app2/style.css">
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script src="data/boxes.js"></script>
-<script src="data/boxes-tight.js"></script>
-<script src="data/content.js"></script>
-<script src="data/dict2.js"></script>
-<script src="data/zhuzi.js"></script>
-<script src="data/laws.js"></script>
-<script src="data/videos.js"></script>
-<script src="data/duidu.js"></script>
-<script src="data/jinglin.js"></script>
+<!-- built by patch-mobile/build/build.js: precompiled JSX + local React production builds; sources stay in app*/ and data/ -->
+<script defer src="dist/react.production.min.js"></script>
+<script defer src="dist/react-dom.production.min.js"></script>
+<script defer src="dist/v2.data.51678648.js"></script>
+<script defer src="dist/v2.app.30583c89.js"></script>
 </head>
 <body>
 <div id="root"></div>
-<script type="text/babel" src="app2/core.jsx"></script>
-<script type="text/babel" src="app2/jinglin.jsx"></script>
-<script type="text/babel" src="app2/course.jsx"></script>
-<script type="text/babel" src="app2/tie.jsx"></script>
-<script type="text/babel">
-const TABS = [['course', '课程', 'course'], ['read', '读文', 'read'], ['tie', '字帖', 'tie'], ['me', '我的', 'me']];
-function App() {
-  const [s, update] = useStore2();
-  const [route, setRoute] = React.useState(() => { try { return JSON.parse(localStorage.getItem('sjx2-route')) || { tab: 'course' }; } catch (e) { return { tab: 'course' }; } });
-  const [char, setChar] = React.useState(null);
-  React.useEffect(() => { localStorage.setItem('sjx2-route', JSON.stringify(route)); }, [route]);
-  React.useEffect(() => { document.documentElement.dataset.theme = s.settings.theme; }, [s.settings.theme]);
-  const openLesson = n => { setRoute({ tab: 'course', lesson: n }); window.scrollTo(0, 0); };
-  const openChar = (c, i) => setChar({ c, i });
-  const openJL = k => { setRoute({ tab: 'course', jl: k }); window.scrollTo(0, 0); };
-  const goRead = n => { setRoute({ tab: 'read', focus: n }); };
-  const goTie = p => { localStorage.setItem('sjx2-page', p); setRoute({ tab: 'tie' }); window.scrollTo(0, 0); };
-  const home = () => setRoute({ tab: 'course' });
-  const script = s.settings.script;
-  return (
-    <ScriptCtx.Provider value={script}>
-      <header className="top"><div className="top-in">
-        <div className="brand"><Seal size={34}>集王</Seal>聖教序習字</div>
-        <nav className="tabs">{TABS.map(([k, l, ic]) => <button key={k} className={'tab ' + (route.tab === k ? 'on' : '')} onClick={() => { setRoute({ tab: k }); window.scrollTo(0, 0); }}><Icon name={ic} size={18} />{l}</button>)}</nav>
-        <div className="togs">
-          <button className="tog" title="繁 / 简" onClick={() => update(n => { n.settings.script = script === 'trad' ? 'simp' : 'trad'; })}>{script === 'trad' ? '繁' : '简'}</button>
-          <button className="tog" title="日间 / 夜间" onClick={() => update(n => { n.settings.theme = n.settings.theme === 'day' ? 'night' : 'day'; })}><Icon name={s.settings.theme === 'day' ? 'sun' : 'moon'} size={17} /></button>
-        </div>
-      </div></header>
-      <main className="main" data-screen-label={route.tab + (route.lesson != null ? '-' + route.lesson : '')}>
-        {route.tab === 'course' && route.lesson == null && route.jl == null && <CourseHome s={s} openLesson={openLesson} openJL={openJL} />}
-        {route.tab === 'course' && route.lesson != null && <LessonPage n={route.lesson} s={s} update={update} back={home} openChar={openChar} openLesson={openLesson} />}
-        {route.tab === 'course' && route.jl === 'home' && <JinglinHome s={s} back={home} openJL={openJL} />}
-        {route.tab === 'course' && typeof route.jl === 'number' && <JinglinDay k={route.jl} s={s} update={update} back={home} openJL={openJL} openChar={openChar} goRead={goRead} />}
-        {route.tab === 'read' && <ReadPage s={s} openChar={openChar} focus={route.focus} goTie={goTie} />}
-        {route.tab === 'tie' && <TiePage openChar={openChar} />}
-        {route.tab === 'me' && <MePage s={s} update={update} openLesson={openLesson} />}
-      </main>
-      {char && <CharDrawer c={char.c} boxIdx={char.i} onClose={() => setChar(null)} openChar={openChar} openLesson={n => { setChar(null); openLesson(n); }} openJL={k => { setChar(null); openJL(k); }} goRead={n => { setChar(null); goRead(n); }} />}
-    </ScriptCtx.Provider>
-  );
-}
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-</script>
+<script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
 </body>
 </html>

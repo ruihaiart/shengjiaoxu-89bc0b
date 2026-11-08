@@ -47,7 +47,7 @@ function TiePage({ openChar }) {
       <div className="filmstrip">
         <button className="icon-btn" onClick={() => setPage(Math.min(30, page + 1))} disabled={page === 30}><Icon name="left" /></button>
         <div className="fs-track" ref={trackRef}>
-          {Array.from({ length: 30 }, (_, k) => 30 - k).map(p => <button key={p} className={'fs-th ' + (p === page ? 'on' : '')} onClick={() => setPage(p)}><img src={pageSrc(p)} alt="" loading="lazy" /><span>{p}</span></button>)}
+          {Array.from({ length: 30 }, (_, k) => 30 - k).map(p => <button key={p} className={'fs-th ' + (p === page ? 'on' : '')} onClick={() => setPage(p)}><img src={pageSrc(p).replace('/rubbing/', '/rubbing/thumb/')} alt="" loading="lazy" /><span>{p}</span></button>)}
         </div>
         <button className="icon-btn" onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1}><Icon name="right" /></button>
       </div>

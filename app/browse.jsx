@@ -69,7 +69,7 @@ function BrowsePage({ openChar, s }) {
         <div className="fs-track">
           {Array.from({ length: 30 }, (_, k) => 30 - k).map(p => (
             <button key={p} className={'fs-th ' + (p === page ? 'on' : '')} onClick={() => setPage(p)} ref={el => { if (el && p === page) el.parentNode.scrollLeft = el.offsetLeft - el.parentNode.clientWidth / 2 + 40; }}>
-              <img src={pageSrc(p)} alt="" loading="lazy" /><span>{p}</span>
+              <img src={pageSrc(p).replace('/rubbing/', '/rubbing/thumb/')} alt="" loading="lazy" /><span>{p}</span>
             </button>
           ))}
         </div>

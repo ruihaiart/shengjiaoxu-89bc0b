@@ -20,84 +20,17 @@
 <title>圣教序习字 · 每日临池</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;900&family=Noto+Serif+TC:wght@400;600;900&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;900&family=Noto+Serif+TC:wght@400;600;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;900&family=Noto+Serif+TC:wght@400;600;900&display=swap"></noscript>
 <link rel="stylesheet" href="app/style.css">
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script src="data/boxes.js"></script>
-<script src="data/content.js"></script>
+<!-- built by patch-mobile/build/build.js: precompiled JSX + local React production builds; sources stay in app*/ and data/ -->
+<script defer src="dist/react.production.min.js"></script>
+<script defer src="dist/react-dom.production.min.js"></script>
+<script defer src="dist/v1.data.9feb0fcb.js"></script>
+<script defer src="dist/v1.app.5085a3ab.js"></script>
 </head>
 <body>
 <div id="root"></div>
-<script type="text/babel" src="app/core.jsx"></script>
-<script type="text/babel" src="app/pages.jsx"></script>
-<script type="text/babel" src="app/today.jsx"></script>
-<script type="text/babel" src="app/browse.jsx"></script>
-<script type="text/babel">
-const NAV = [
-  ['today', '今日', 'today'],
-  ['browse', '全帖', 'browse'],
-  ['laws', '十八法', 'laws'],
-  ['videos', '视频', 'video'],
-  ['progress', '进度', 'progress'],
-];
-
-function App() {
-  const [s, update] = useStore();
-  const [route, setRoute] = React.useState(() => localStorage.getItem('sjx-route') || 'today');
-  const [lawSel, setLawSel] = React.useState(() => +(localStorage.getItem('sjx-law') ?? 0));
-  const [char, setChar] = React.useState(null);
-  const [video, setVideo] = React.useState(null);
-  const theme = s.settings.theme, script = s.settings.script;
-
-  React.useEffect(() => { localStorage.setItem('sjx-route', route); }, [route]);
-  React.useEffect(() => { localStorage.setItem('sjx-law', lawSel); }, [lawSel]);
-  React.useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
-  React.useEffect(() => { if (route === 'laws' && lawSel === 0 && !localStorage.getItem('sjx-law-touched')) { setLawSel(s.lessonIdx); localStorage.setItem('sjx-law-touched', 1); } }, [route]);
-
-  const go = (r, arg) => { setRoute(r); if (r === 'laws' && arg != null) setLawSel(arg); window.scrollTo(0, 0); };
-  const openChar = (c, i) => setChar({ c, i });
-  const setTheme = () => update(n => { n.settings.theme = n.settings.theme === 'night' ? 'day' : 'night'; });
-  const setScript = () => update(n => { n.settings.script = n.settings.script === 'trad' ? 'simp' : 'trad'; });
-
-  const togs = <>
-    <button className="tog" onClick={setScript} title="繁 / 简">{script === 'trad' ? '繁' : '简'}</button>
-    <button className="tog" onClick={setTheme} title="夜读 / 晨临"><Icon name={theme === 'night' ? 'moon' : 'sun'} size={18} /></button>
-  </>;
-
-  return (
-    <ScriptCtx.Provider value={script}>
-      <div className="shell">
-        <aside className="side">
-          <div className="brand"><Seal size={36}>集王</Seal>聖教序</div>
-          {NAV.map(([k, l, ic]) => (
-            <button key={k} className={'nav-btn ' + (route === k ? 'on' : '')} onClick={() => go(k)}>
-              <Icon name={ic} size={22} /><span>{l}</span>
-            </button>
-          ))}
-          <div className="side-foot">{togs}</div>
-        </aside>
-        <div>
-          <div className="mtop">
-            <div className="mbrand"><Seal size={30}>集王</Seal>聖教序習字</div>
-            <div className="mtogs">{togs}</div>
-          </div>
-          <main className="main" data-screen-label={route}>
-            {route === 'today' && <TodayPage s={s} update={update} openChar={openChar} openVideo={setVideo} go={go} />}
-            {route === 'browse' && <BrowsePage s={s} openChar={openChar} />}
-            {route === 'laws' && <LawsPage s={s} lawSel={lawSel} setLawSel={setLawSel} openChar={openChar} />}
-            {route === 'videos' && <VideosPage openVideo={setVideo} />}
-            {route === 'progress' && <ProgressPage s={s} update={update} openChar={openChar} />}
-          </main>
-        </div>
-      </div>
-      {char && <CharDrawer c={char.c} boxIdx={char.i} s={s} onClose={() => setChar(null)} openChar={openChar} openVideo={setVideo} go={go} />}
-      <VideoModal video={video} onClose={() => setVideo(null)} />
-    </ScriptCtx.Provider>
-  );
-}
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-</script>
+<script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
 </body>
 </html>

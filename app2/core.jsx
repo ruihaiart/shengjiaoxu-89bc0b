@@ -95,7 +95,7 @@ function CharCrop({ occ, c, size = 120, invert = false, grid = 'none', className
   const pageStyle = { position: 'absolute', left: pct(-sx), top: pct(-sy), width: pct(PAGE_W), height: pct(PAGE_H), maxWidth: 'none' };
   if (!t) return (
     <div className={'crop ' + (invert ? 'is-inv ' : '') + className} style={{ width: size, height: size }}>
-      <img src={pageSrc(o.page)} alt={o.c} draggable="false" style={pageStyle} />
+      <img src={pageSrc(o.page)} alt={o.c} draggable="false" loading="lazy" decoding="async" style={pageStyle} />
       {grid !== 'none' && <GridOverlay kind={grid} />}
     </div>
   );
@@ -103,9 +103,9 @@ function CharCrop({ occ, c, size = 120, invert = false, grid = 'none', className
   const ww = Math.max(1, wx1 - wx0), wh = Math.max(1, wy1 - wy0);
   return (
     <div className={'crop crop-tight ' + (invert ? 'is-inv ' : '') + className} style={{ width: size, height: size }}>
-      <img className="crop-ghost" src={pageSrc(o.page)} alt="" aria-hidden="true" draggable="false" style={pageStyle} />
+      <img className="crop-ghost" src={pageSrc(o.page)} alt="" aria-hidden="true" draggable="false" loading="lazy" decoding="async" style={pageStyle} />
       <div className="crop-win" style={{ left: pct(wx0 - sx), top: pct(wy0 - sy), width: pct(ww), height: pct(wh) }}>
-        <img src={pageSrc(o.page)} alt={o.c} draggable="false" style={{ position: 'absolute', left: `${-wx0 / ww * 100}%`, top: `${-wy0 / wh * 100}%`, width: `${PAGE_W / ww * 100}%`, height: `${PAGE_H / wh * 100}%`, maxWidth: 'none' }} />
+        <img src={pageSrc(o.page)} alt={o.c} draggable="false" loading="lazy" decoding="async" style={{ position: 'absolute', left: `${-wx0 / ww * 100}%`, top: `${-wy0 / wh * 100}%`, width: `${PAGE_W / ww * 100}%`, height: `${PAGE_H / wh * 100}%`, maxWidth: 'none' }} />
       </div>
       {grid !== 'none' && <GridOverlay kind={grid} />}
     </div>
