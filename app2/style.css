@@ -1,5 +1,5 @@
 /* ============ 圣教序习字 v2 ============ */
-:root{--sat:env(safe-area-inset-top,0px);--serif:"Noto Serif SC","Noto Serif TC","Songti SC",serif;--cin:oklch(0.55 0.17 32);--cin-soft:oklch(0.55 0.17 32 / .1);--r:4px}
+:root{--sat:env(safe-area-inset-top,0px);--serif:"Songti SC","Songti TC","STSong","Noto Serif SC","Noto Serif TC","Source Han Serif SC","SimSun",serif;--cin:oklch(0.55 0.17 32);--cin-soft:oklch(0.55 0.17 32 / .1);--r:4px}
 html[data-theme=day]{--bg:#f4efe5;--bg2:#ebe4d5;--card:#fbf8f2;--line:#d8cdb8;--line2:#e5dccb;--ink:#221e19;--ink2:#4c443a;--mute:#8a7f70;--gold:#8a6a35;--crop:#15120f;--grid:oklch(0.55 0.17 32 / .6);--shadow:0 18px 50px rgba(70,45,10,.16)}
 html[data-theme=night]{--bg:#141210;--bg2:#1d1a16;--card:#201c18;--line:#3a332b;--line2:#2b2621;--ink:#ece3d2;--ink2:#b9ad99;--mute:#81776a;--gold:#d8c39a;--crop:#0e0d0c;--grid:oklch(0.6 0.17 32 / .55);--shadow:0 18px 50px rgba(0,0,0,.5)}
 *{box-sizing:border-box}

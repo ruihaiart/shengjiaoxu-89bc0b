@@ -80,6 +80,10 @@ const useScript = () => React.useContext(ScriptCtx);
 const showChar = (c, sc) => sc === 'simp' ? (DICT[c]?.[0] || c) : c;
 
 // ---------- 单字裁切（无切图时显示字形占位） ----------
+// 单字切图（patch-mobile/build/crops.py 预先切好：assets/crops/<字序>.jpg，以紧框为中心、边长 = max(w,h)×(1+2×CROP_PAD)），不再为看一个字下载整页拓本
+const CROP_PAD = 0.3;
+const cropSrc = i => `assets/crops/${i}.jpg`;
+const cropBox = (bx, by, bw, bh) => { const S = Math.max(bw, bh) * (1 + 2 * CROP_PAD), cx = bx + bw / 2, cy = by + bh / 2; const x0 = Math.round(cx - S / 2), y0 = Math.round(cy - S / 2), x1 = Math.round(cx + S / 2), y1 = Math.round(cy + S / 2); return { x0, y0, w: Math.max(1, x1 - x0), h: Math.max(1, y1 - y0) }; };
 function CharCrop({ occ, c, size = 120, invert = false, grid = 'none', className = '', pad = 0.14 }) {
   const o = occ || (c && CHAR_INDEX[c] && CHAR_INDEX[c][0]);
   if (!o) return (
@@ -91,11 +95,12 @@ function CharCrop({ occ, c, size = 120, invert = false, grid = 'none', className
   const t = (window.SJX_TIGHT || [])[o.i];
   const [bx, by, bw, bh] = t || [o.x, o.y, o.w, o.h];
   const side = Math.max(bw, bh) * (1 + pad * 2), cx = bx + bw / 2, cy = by + bh / 2, sx = cx - side / 2, sy = cy - side / 2;
+  const K = cropBox(bx, by, bw, bh), src = cropSrc(o.i);
   const pct = v => `${v / side * 100}%`;
-  const pageStyle = { position: 'absolute', left: pct(-sx), top: pct(-sy), width: pct(PAGE_W), height: pct(PAGE_H), maxWidth: 'none' };
+  const imgStyle = { position: 'absolute', left: pct(K.x0 - sx), top: pct(K.y0 - sy), width: pct(K.w), height: pct(K.h), maxWidth: 'none' };
   if (!t) return (
     <div className={'crop ' + (invert ? 'is-inv ' : '') + className} style={{ width: size, height: size }}>
-      <img src={pageSrc(o.page)} alt={o.c} draggable="false" loading="lazy" decoding="async" style={pageStyle} />
+      <img src={src} alt={o.c} draggable="false" decoding="async" style={imgStyle} />
       {grid !== 'none' && <GridOverlay kind={grid} />}
     </div>
   );
@@ -103,9 +108,9 @@ function CharCrop({ occ, c, size = 120, invert = false, grid = 'none', className
   const ww = Math.max(1, wx1 - wx0), wh = Math.max(1, wy1 - wy0);
   return (
     <div className={'crop crop-tight ' + (invert ? 'is-inv ' : '') + className} style={{ width: size, height: size }}>
-      <img className="crop-ghost" src={pageSrc(o.page)} alt="" aria-hidden="true" draggable="false" loading="lazy" decoding="async" style={pageStyle} />
+      <img className="crop-ghost" src={src} alt="" aria-hidden="true" draggable="false" decoding="async" style={imgStyle} />
       <div className="crop-win" style={{ left: pct(wx0 - sx), top: pct(wy0 - sy), width: pct(ww), height: pct(wh) }}>
-        <img src={pageSrc(o.page)} alt={o.c} draggable="false" loading="lazy" decoding="async" style={{ position: 'absolute', left: `${-wx0 / ww * 100}%`, top: `${-wy0 / wh * 100}%`, width: `${PAGE_W / ww * 100}%`, height: `${PAGE_H / wh * 100}%`, maxWidth: 'none' }} />
+        <img src={src} alt={o.c} draggable="false" decoding="async" style={{ position: 'absolute', left: `${(K.x0 - wx0) / ww * 100}%`, top: `${(K.y0 - wy0) / wh * 100}%`, width: `${K.w / ww * 100}%`, height: `${K.h / wh * 100}%`, maxWidth: 'none' }} />
       </div>
       {grid !== 'none' && <GridOverlay kind={grid} />}
     </div>

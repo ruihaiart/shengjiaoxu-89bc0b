@@ -3,9 +3,9 @@
    Rubbing/book images (assets/): cache-first in a long-lived cache -> each image downloads once per device.
    Cross-origin (Google Fonts, Bilibili): untouched. */
 'use strict';
-const VERSION = 'sjx-a6ccbab7';
-const IMG = 'sjx-img-634393a2';
-const PRECACHE = ["./","index.html","v1.html","app2/style.css","app/style.css","manifest.json","dist/react-dom.production.min.js","dist/react.production.min.js","dist/v1.app.5085a3ab.js","dist/v1.data.9feb0fcb.js","dist/v2.app.30583c89.js","dist/v2.data.51678648.js","assets/icon/apple-touch-icon.png","assets/icon/icon-192.png","assets/icon/favicon-32.png","assets/book/hold.jpg"];
+const VERSION = 'sjx-d6d5815e';
+const IMG = 'sjx-img-c98df56a';
+const PRECACHE = ["./","index.html","v1.html","app2/style.css","app/style.css","manifest.json","dist/react-dom.production.min.js","dist/react.production.min.js","dist/v1.app.5085a3ab.js","dist/v1.data.9feb0fcb.js","dist/v2.app.a0bc3412.js","dist/v2.data.51678648.js","assets/icon/apple-touch-icon.png","assets/icon/icon-192.png","assets/icon/favicon-32.png","assets/book/hold.jpg"];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
