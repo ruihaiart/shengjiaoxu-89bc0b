@@ -80,10 +80,10 @@ const useScript = () => React.useContext(ScriptCtx);
 const showChar = (c, sc) => sc === 'simp' ? (DICT[c]?.[0] || c) : c;
 
 // ---------- 单字裁切（无切图时显示字形占位） ----------
-// 单字切图（patch-mobile/build/crops.py 预先切好：assets/crops/<字序>.jpg，以紧框为中心、边长 = max(w,h)×(1+2×CROP_PAD)），不再为看一个字下载整页拓本
+// 单字切图（patch-mobile/build/crops.py 预先切好：assets/crops/<字序>.jpg，以摆放中心（墨迹重心）为中心、边长 = max(w,h)×(1+2×CROP_PAD)），不再为看一个字下载整页拓本
 const CROP_PAD = 0.3;
 const cropSrc = i => `assets/crops/${i}.jpg`;
-const cropBox = (bx, by, bw, bh) => { const S = Math.max(bw, bh) * (1 + 2 * CROP_PAD), cx = bx + bw / 2, cy = by + bh / 2; const x0 = Math.round(cx - S / 2), y0 = Math.round(cy - S / 2), x1 = Math.round(cx + S / 2), y1 = Math.round(cy + S / 2); return { x0, y0, w: Math.max(1, x1 - x0), h: Math.max(1, y1 - y0) }; };
+const cropBox = (bw, bh, cx, cy) => { const S = Math.max(bw, bh) * (1 + 2 * CROP_PAD); const x0 = Math.round(cx - S / 2), y0 = Math.round(cy - S / 2), x1 = Math.round(cx + S / 2), y1 = Math.round(cy + S / 2); return { x0, y0, w: Math.max(1, x1 - x0), h: Math.max(1, y1 - y0) }; };
 function CharCrop({ occ, c, size = 120, invert = false, grid = 'none', className = '', pad = 0.14 }) {
   const o = occ || (c && CHAR_INDEX[c] && CHAR_INDEX[c][0]);
   if (!o) return (
@@ -94,8 +94,10 @@ function CharCrop({ occ, c, size = 120, invert = false, grid = 'none', className
   // 紧框数据（data/boxes-tight.js，由 patch-mobile/tight/refine3.py 生成）：米字格以字形墨迹为准居中，可视窗只含本字所在列段
   const t = (window.SJX_TIGHT || [])[o.i];
   const [bx, by, bw, bh] = t || [o.x, o.y, o.w, o.h];
-  const side = Math.max(bw, bh) * (1 + pad * 2), cx = bx + bw / 2, cy = by + bh / 2, sx = cx - side / 2, sy = cy - side / 2;
-  const K = cropBox(bx, by, bw, bh), src = cropSrc(o.i);
+  // 摆放中心：墨迹重心（tight/centroid.py 写在 t[8], t[9]，已限制在外框中心 ±0.10×字大小内），缺则外框中心
+  const cx = t && t.length > 9 ? t[8] : bx + bw / 2, cy = t && t.length > 9 ? t[9] : by + bh / 2;
+  const side = Math.max(bw, bh) * (1 + pad * 2), sx = cx - side / 2, sy = cy - side / 2;
+  const K = cropBox(bw, bh, cx, cy), src = cropSrc(o.i);
   const pct = v => `${v / side * 100}%`;
   const imgStyle = { position: 'absolute', left: pct(K.x0 - sx), top: pct(K.y0 - sy), width: pct(K.w), height: pct(K.h), maxWidth: 'none' };
   if (!t) return (
